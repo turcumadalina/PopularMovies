@@ -47,6 +47,7 @@ public class Helpers extends EspressoTestBase {
 
         return isVisible;
     }
+
     public static boolean checkIfAlertIsVisible(String text, int waitTimeInSeconds) {
         boolean isVisible = false;
         long endTime;
@@ -64,12 +65,19 @@ public class Helpers extends EspressoTestBase {
 
         return isVisible;
     }
-    public static boolean isItemDisplayed(String text) throws Exception {
-        return Helpers.checkIfUIObjectIsVisible(allOf(withText(text), isCompletelyDisplayed()), 3);
+
+    public static boolean isItemDisplayed(String string) throws Exception {
+        return Helpers.checkIfUIObjectIsVisible(allOf(withText(string), isCompletelyDisplayed()), 3);
     }
+
     public static boolean isTextDisplayed(String text, int rid) throws Exception{
         return Helpers.getText(withId(rid)).equalsIgnoreCase(text);
     }
+
+    public static boolean isYouTubeDisplayed(String text) throws Exception{
+        return Helpers.getUiObjectByPackage(text).equals(text);
+    }
+
     public static String getText(final Matcher<View> matcher) {
         final String[] stringHolder = {null};
         onView(matcher).perform(new ViewAction() {
@@ -91,13 +99,16 @@ public class Helpers extends EspressoTestBase {
         });
         return stringHolder[0];
     }
+
     public static UiObject getUiObjectByText(String text) throws Exception {
         return device.findObject( new UiSelector().text(text));
     }
+
     public static UiObject getUiObjectByResourceId(String nameSpace, String resourceId) throws Exception {
         return device.findObject( new UiSelector().resourceId( nameSpace + ":id/" + resourceId ) );
     }
+
+    public static UiObject getUiObjectByPackage(String text) throws Exception {
+        return device.findObject( new UiSelector().text(text));
+    }
 }
-
-
-

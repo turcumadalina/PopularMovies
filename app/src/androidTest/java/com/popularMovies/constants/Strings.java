@@ -5,4 +5,6 @@ package com.popularMovies.constants;
  */
 
 public class Strings {
+    public static final String NO_BOOKMARKS = "NO BOOKMARKS ADDED";
+    public static final String NOW_PLAYING_MOVIES = "Now Playing Movies";
 }
