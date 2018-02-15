@@ -21,7 +21,7 @@ public class BookmarkTests extends EspressoTestBase {
     @Test
     public void testiIfBookmarkedMoviesIsEmpty() throws Exception {
         NavDrawer.bookmarkedMovies();
-        Assert.assertTrue(Strings.NO_BOOKMARKS, BookmarkMovie.isNoBookmarksAdded());
+        Helpers.isItemDisplayed(Strings.NO_BOOKMARKS);
     }
 
     @Test
@@ -44,6 +44,6 @@ public class BookmarkTests extends EspressoTestBase {
     public void testPlayItem() throws Exception {
         NowPlayingMovies.clickAMovieNowPlayingMovies("224");
         Movie.playMovie();
-        Assert.assertTrue(Strings.NOW_PLAYING_MOVIES, NowPlayingMovies.isNowPlayingMovies());
+        Helpers.isItemDisplayed(Strings.NOW_PLAYING_MOVIES);
     }
 }
