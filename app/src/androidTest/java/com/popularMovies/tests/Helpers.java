@@ -1,5 +1,6 @@
 package com.popularMovies.tests;
 
+import android.os.SystemClock;
 import android.support.test.espresso.AppNotIdleException;
 import android.support.test.espresso.NoMatchingRootException;
 import android.support.test.espresso.NoMatchingViewException;
@@ -12,11 +13,18 @@ import android.widget.TextView;
 
 import com.popularMovies.constants.Time;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+
+import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
@@ -36,11 +44,11 @@ public class Helpers extends EspressoTestBase {
 
         endTime = System.currentTimeMillis() + waitTimeInSeconds * Time.ONE_SECOND;
 
-        while (!isVisible && System.currentTimeMillis() <= endTime) {
+        while(!isVisible && System.currentTimeMillis() <= endTime) {
             try {
-                onView( matcher ).check( matches( isDisplayed() ) );
+                onView(matcher).check(matches(isDisplayed()));
                 isVisible = true;
-            } catch (NoMatchingViewException | AppNotIdleException | AssertionFailedError | NoMatchingRootException e) {
+            } catch(NoMatchingViewException | AppNotIdleException | AssertionFailedError | NoMatchingRootException e) {
                 // do nothing
             }
         }
@@ -54,11 +62,11 @@ public class Helpers extends EspressoTestBase {
 
         endTime = System.currentTimeMillis() + waitTimeInSeconds * Time.ONE_SECOND;
 
-        while (!isVisible && System.currentTimeMillis() <= endTime) {
+        while(!isVisible && System.currentTimeMillis() <= endTime) {
             try {
-                device.findObject( new UiSelector().text(text));
+                device.findObject(new UiSelector().text(text));
                 isVisible = true;
-            } catch (NoMatchingViewException | AppNotIdleException | AssertionFailedError | NoMatchingRootException e) {
+            } catch(NoMatchingViewException | AppNotIdleException | AssertionFailedError | NoMatchingRootException e) {
                 // do nothing
             }
         }
@@ -66,15 +74,37 @@ public class Helpers extends EspressoTestBase {
         return isVisible;
     }
 
+    public static boolean checkIfItemIsListed(int rid2, Matcher<View> matcher) {
+        boolean found = false;
+        int i = 0;
+        int MAX_SWIPES = 2;
+        while(!found && i < MAX_SWIPES) {
+            onView(withId(rid2)).perform(swipeUp());
+            SystemClock.sleep(500);
+            try {
+                onView(matcher).check(matches(isDisplayed())).perform(click());
+                found = true;
+            } catch(Exception e) {
+                // The search continues
+            }
+            i++;
+        }
+
+        if(!found) {
+            Assert.fail("The element has not been found.");
+        }
+        return found;
+    }
+
     public static boolean isItemDisplayed(String string) throws Exception {
         return Helpers.checkIfUIObjectIsVisible(allOf(withText(string), isCompletelyDisplayed()), 3);
     }
 
-    public static boolean isTextDisplayed(String text, int rid) throws Exception{
+    public static boolean isTextDisplayed(String text, int rid) throws Exception {
         return Helpers.getText(withId(rid)).equalsIgnoreCase(text);
     }
 
-    public static boolean isYouTubeDisplayed(String text) throws Exception{
+    public static boolean isYouTubeDisplayed(String text) throws Exception {
         return Helpers.getUiObjectByPackage(text).equals(text);
     }
 
@@ -101,14 +131,18 @@ public class Helpers extends EspressoTestBase {
     }
 
     public static UiObject getUiObjectByText(String text) throws Exception {
-        return device.findObject( new UiSelector().text(text));
+        return device.findObject(new UiSelector().text(text));
     }
 
     public static UiObject getUiObjectByResourceId(String nameSpace, String resourceId) throws Exception {
-        return device.findObject( new UiSelector().resourceId( nameSpace + ":id/" + resourceId ) );
+        return device.findObject(new UiSelector().resourceId(nameSpace + ":id/" + resourceId));
     }
 
     public static UiObject getUiObjectByPackage(String text) throws Exception {
-        return device.findObject( new UiSelector().text(text));
+        return device.findObject(new UiSelector().text(text));
+    }
+
+    public static UiObject getUiObjectByClass(String text) throws Exception {
+        return device.findObject(new UiSelector().className(text));
     }
 }

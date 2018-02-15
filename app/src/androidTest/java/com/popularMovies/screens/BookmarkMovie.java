@@ -1,12 +1,10 @@
 package com.popularMovies.screens;
 
+import com.popularMovies.tests.Helpers;
+
 import work.technie.popularmovies.R;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
@@ -15,12 +13,7 @@ import static org.hamcrest.Matchers.allOf;
  */
 
 public class BookmarkMovie {
-    public static boolean isNoBookmarksAdded() throws Exception{
-        try{
-            onView( allOf( withText(R.string.bookmarks_empty), isCompletelyDisplayed())).check(matches(isDisplayed()));
-        } catch(Exception e){
-            return true;
-        }
-        return false;
+    public static boolean isNoBookmarksAdded() throws Exception {
+        return Helpers.checkIfUIObjectIsVisible(allOf(withText(R.string.bookmarks_empty), isCompletelyDisplayed()), 3);
     }
 }

@@ -3,14 +3,9 @@ package com.popularMovies.screens;
 import com.popularMovies.constants.Strings;
 import com.popularMovies.tests.Helpers;
 
-import work.technie.popularmovies.R;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
@@ -24,12 +19,7 @@ public class NowPlayingMovies {
         Helpers.isItemDisplayed(text);
     }
 
-    public static boolean isNowPlayingMovies() throws Exception{
-        try{
-            onView( allOf( withText(Strings.NOW_PLAYING_MOVIES), isCompletelyDisplayed())).check(matches(isDisplayed()));
-        } catch(Exception e){
-            return true;
-        }
-        return false;
+    public static boolean isTitleDisplayed() throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withText(Strings.NOW_PLAYING_MOVIES), isCompletelyDisplayed()), 3);
     }
 }
