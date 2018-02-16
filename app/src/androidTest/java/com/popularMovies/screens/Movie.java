@@ -4,15 +4,12 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 
-import com.popularMovies.constants.Strings;
 import com.popularMovies.tests.Helpers;
 
 import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -37,8 +34,8 @@ public class Movie {
         okMessageButton.click();
     }
 
-    public static boolean isTitleDisplayed() throws Exception{
-        return Helpers.checkIfUIObjectIsVisible(allOf(withText(Strings.NUTJOB2), isCompletelyDisplayed()), 3);
+    public static boolean isTitleDisplayed(String title) throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withText(title), isCompletelyDisplayed()), 3);
     }
 
     public static void playMovie() throws Exception{
@@ -46,10 +43,6 @@ public class Movie {
         Helpers.isYouTubeDisplayed("com.google.android.youtube");
         Movie.navigateBackToApp();
 
-    }
-
-    public static void scrollDown(int rid) throws Exception {
-        Helpers.checkIfItemIsListed(R.id.drawer_layout, allOf(withId(R.id.similar_movies_title), isCompletelyDisplayed()));
     }
 
     public static void navigateBackToApp() throws Exception{

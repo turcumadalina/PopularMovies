@@ -1,5 +1,6 @@
 package com.popularMovies.tests;
 
+import com.popularMovies.constants.Strings;
 import com.popularMovies.screens.BookmarkMovie;
 import com.popularMovies.screens.Movie;
 import com.popularMovies.screens.NavDrawer;
@@ -11,7 +12,6 @@ import org.junit.Test;
 import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
@@ -28,25 +28,25 @@ public class BookmarkTests extends EspressoTestBase {
 
     @Test
     public void testAddNewItemToBookmarkedMovies() throws Exception {
-        NowPlayingMovies.clickAMovieNowPlayingMovies("6.0/10");
+        NowPlayingMovies.clickAMovieNowPlayingMovies("5.9/10");
         Movie.bookmarkMovie();
         pressBack();
         NavDrawer.bookmarkedMovies();
-        Helpers.isTextDisplayed(  "6.0/10", R.id.vote_text);
+        Assert.assertTrue("The Nutjob 2 is not displayed.", Movie.isTitleDisplayed("5.9/10"));
     }
 
     @Test
     public void testShareItem() throws Exception {
         NowPlayingMovies.clickAMovieNowPlayingMovies("224");
         Movie.shareMovie();
-        Assert.assertTrue("The Nutjob 2 is not displayed.", Movie.isTitleDisplayed());
+        Assert.assertTrue("The Nutjob 2 is not displayed.", Movie.isTitleDisplayed(Strings.NUTJOB2));
     }
 
     @Test
     public void testPlayItem() throws Exception {
         NowPlayingMovies.clickAMovieNowPlayingMovies("224");
         Movie.playMovie();
-        Assert.assertTrue("The NowPlayingMovies screen is not displayed.", NowPlayingMovies.isTitleDisplayed());
+        Assert.assertTrue("The NowPlayingMovies screen is not displayed.", Movie.isTitleDisplayed(Strings.NUTJOB2));
     }
 
     @Test

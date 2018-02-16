@@ -16,11 +16,7 @@ import com.popularMovies.constants.Time;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-
-import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
