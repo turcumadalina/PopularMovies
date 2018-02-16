@@ -12,6 +12,7 @@ import org.junit.Test;
 import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
@@ -55,5 +56,12 @@ public class BookmarkTests extends EspressoTestBase {
         Helpers.checkIfItemIsListed(R.id.drawer_layout, withText("http://thenutjob.com"));
         Movie.navigateBackToApp();
         Assert.assertTrue("The NowPlayingMovies screen is not displayed.", NowPlayingMovies.isTitleDisplayed());
+    }
+
+    @Test
+    public void testIfAnActorIsDisplayed() throws Exception{
+        NowPlayingMovies.clickAMovieNowPlayingMovies("224");
+        Helpers.clickOnAChild(R.id.drawer_layout, withId(R.id.recyclerview_cast), 1);
+        Assert.assertTrue("The Katherine Heigl is not displayed.", Movie.isTitleDisplayed(Strings.KATHERINEHEIGL));
     }
 }
