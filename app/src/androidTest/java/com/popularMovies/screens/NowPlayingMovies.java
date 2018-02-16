@@ -20,6 +20,6 @@ public class NowPlayingMovies {
     }
 
     public static boolean isTitleDisplayed() throws Exception{
-        return Helpers.checkIfUIObjectIsVisible(allOf(withText(Strings.NOW_PLAYING_MOVIES), isCompletelyDisplayed()), 3);
+        return Helpers.checkIfUIObjectIsVisible(allOf(withText(Strings.NUTJOB2), isCompletelyDisplayed()), 3);
     }
 }

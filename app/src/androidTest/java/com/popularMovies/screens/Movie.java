@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.allOf;
  */
 
 public class Movie {
-    public static void bookmarkMovie() throws Exception{
+    public static void bookmarkItem() throws Exception{
         onView(withId(R.id.bookmark)).perform(click());
     }
 
@@ -36,6 +36,14 @@ public class Movie {
 
     public static boolean isTitleDisplayed(String title) throws Exception{
         return Helpers.checkIfUIObjectIsVisible(allOf(withText(title), isCompletelyDisplayed()), 3);
+    }
+
+    public static boolean isActorDisplayed(int rid) throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withId(rid), isCompletelyDisplayed()), 3);
+    }
+
+    public static boolean isMovieDisplayed(int backgroundmovieimage) throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withId(backgroundmovieimage), isCompletelyDisplayed()), 3);
     }
 
     public static void playMovie() throws Exception{

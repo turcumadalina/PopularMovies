@@ -9,6 +9,8 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiSelector;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.popularMovies.constants.Time;
@@ -16,7 +18,12 @@ import com.popularMovies.constants.Time;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+
+import work.technie.popularmovies.R;
+
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -71,7 +78,7 @@ public class Helpers extends EspressoTestBase {
         return isVisible;
     }
 
-    public static boolean clickOnAChild(int rid2, Matcher<View> matcher, int position) {
+    public static boolean clickOnAView(int rid2, Matcher<View> matcher, int position) {
         boolean found = false;
         int i = 0;
         int MAX_SWIPES = 2;
@@ -93,11 +100,29 @@ public class Helpers extends EspressoTestBase {
         return found;
     }
 
+    public static Matcher<View> mediaItemPosition(final Matcher<View> parentMatcher, final int childPosition) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with "+childPosition+" child view of type parentMatcher");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view.getParent() instanceof ViewGroup)) {
+                    return parentMatcher.matches(view.getParent());
+                }
+
+                ViewGroup group = (ViewGroup) view.getParent();
+                return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
+            }
+        };
+    }
 
     public static boolean checkIfItemIsListed(int rid2, Matcher<View> matcher) {
         boolean found = false;
         int i = 0;
-        int MAX_SWIPES = 2;
+        int MAX_SWIPES = 4;
         while(!found && i < MAX_SWIPES) {
             onView(withId(rid2)).perform(swipeUp());
             SystemClock.sleep(500);

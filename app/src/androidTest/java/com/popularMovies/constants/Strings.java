@@ -11,4 +11,5 @@ public class Strings {
     public static final String NUTJOB2 = "The Nut Job 2: Nutty by Nature";
     public static final String TOPBILLED = "Top Billed Cast";
     public static final String KATHERINEHEIGL = "Katherine Heigl";
+    public static final String THEMAGICIANS = "The Magicians";
 }
