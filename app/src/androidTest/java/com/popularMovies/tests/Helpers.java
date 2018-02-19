@@ -4,13 +4,14 @@ import android.os.SystemClock;
 import android.support.test.espresso.AppNotIdleException;
 import android.support.test.espresso.NoMatchingRootException;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.util.HumanReadables;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiSelector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.popularMovies.constants.Time;
@@ -20,16 +21,16 @@ import junit.framework.AssertionFailedError;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeMatcher;
-
-import work.technie.popularmovies.R;
-
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.intent.Checks.checkState;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -122,10 +123,10 @@ public class Helpers extends EspressoTestBase {
     public static boolean checkIfItemIsListed(int rid2, Matcher<View> matcher) {
         boolean found = false;
         int i = 0;
-        int MAX_SWIPES = 4;
+        int MAX_SWIPES = 10;
         while(!found && i < MAX_SWIPES) {
             onView(withId(rid2)).perform(swipeUp());
-            SystemClock.sleep(500);
+            SystemClock.sleep(450);
             try {
                 onView(matcher).check(matches(isDisplayed())).perform(click());
                 found = true;
@@ -189,5 +190,50 @@ public class Helpers extends EspressoTestBase {
 
     public static UiObject getUiObjectByClass(String text) throws Exception {
         return device.findObject(new UiSelector().className(text));
+    }
+
+    public final class RepeatActionUntilViewState implements ViewAction {
+        private final ViewAction mAction;
+        private final Matcher<View> mDesiredStateMatcher;
+        private final int mMaxAttempts;
+
+        protected RepeatActionUntilViewState(ViewAction action, Matcher<View> desiredStateMatcher,
+                                             int maxAttempts) {
+            checkNotNull(action);
+            checkNotNull(desiredStateMatcher);
+            checkState(maxAttempts > 1, "maxAttempts should be greater than 1");
+            this.mAction = action;
+            this.mDesiredStateMatcher = desiredStateMatcher;
+            this.mMaxAttempts = maxAttempts;
+        }
+
+        @Override
+        public Matcher<View> getConstraints() {
+            return mAction.getConstraints();
+        }
+
+        @Override
+        public String getDescription() {
+            StringDescription stringDescription = new StringDescription();
+            mDesiredStateMatcher.describeTo(stringDescription);
+            return String.format("%s until: %s", mAction.getDescription(), stringDescription);
+        }
+
+        @Override
+        public void perform(UiController uiController, View view) {
+            int noOfAttempts = 1;
+            for(; !mDesiredStateMatcher.matches(view) && noOfAttempts <= mMaxAttempts; noOfAttempts++) {
+                mAction.perform(uiController, view);
+                uiController.loopMainThreadUntilIdle();
+            }
+            if(noOfAttempts > mMaxAttempts) {
+                throw new PerformException.Builder()
+                        .withActionDescription(this.getDescription())
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(new RuntimeException(
+                                String.format("Failed to achieve view state after %d attempts", mMaxAttempts)))
+                        .build();
+            }
+        }
     }
 }

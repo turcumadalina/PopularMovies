@@ -1,6 +1,7 @@
 package com.popularMovies.screens;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 
@@ -10,9 +11,12 @@ import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.popularMovies.tests.Helpers.mediaItemPosition;
 import static org.hamcrest.Matchers.allOf;
 
 /**
@@ -50,7 +54,6 @@ public class Movie {
         onView(withId(R.id.play)).perform(click());
         Helpers.isYouTubeDisplayed("com.google.android.youtube");
         Movie.navigateBackToApp();
-
     }
 
     public static void navigateBackToApp() throws Exception{
@@ -58,5 +61,14 @@ public class Movie {
         mDevice.pressRecentApps();
         UiObject clickOptiMovies = Helpers.getUiObjectByText("Opti Movies");
         clickOptiMovies.click();
+    }
+
+    public static void navigateToElementFromRecyclerView(int rid, int position) throws Exception{
+        onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+        onView(mediaItemPosition(withId(rid), position)).perform( click() );
+    }
+
+    public static void navigateToElement(int rid) throws Exception{
+        onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed())).perform(click());
     }
 }
