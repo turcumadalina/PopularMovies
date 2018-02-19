@@ -67,6 +67,7 @@ public class BookmarkTests extends EspressoTestBase {
     public void testAddNewTvShowToBookmarkedTvShows() throws Exception {
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 11);
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
+        Movie.pullToRefresh(R.id.detail_swipe_refresh);
         Movie.bookmarkItem();
         pressBack();
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 13);

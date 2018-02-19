@@ -11,12 +11,15 @@ import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.popularMovies.tests.Helpers.mediaItemPosition;
+import static com.popularMovies.tests.Helpers.withCustomConstraints;
 import static org.hamcrest.Matchers.allOf;
 
 /**
@@ -70,5 +73,9 @@ public class Movie {
 
     public static void navigateToElement(int rid) throws Exception{
         onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed())).perform(click());
+    }
+
+    public static void pullToRefresh(int rid) throws Exception{
+        onView(withId(rid)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
     }
 }
