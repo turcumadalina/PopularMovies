@@ -1,19 +1,25 @@
 package com.popularMovies.tests;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.AppNotIdleException;
 import android.support.test.espresso.NoMatchingRootException;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.Root;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiSelector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
 
+import com.popularMovies.constants.Strings;
 import com.popularMovies.constants.Time;
 
 import junit.framework.AssertionFailedError;
@@ -22,12 +28,17 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import work.technie.popularmovies.R;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Created by ioana.hoaghia on 2/14/2018.
@@ -168,4 +179,26 @@ public class Helpers extends EspressoTestBase {
 
         return stringHolder[0];
     }
+
+    public static UiObject getUiObjectByResourceId(String nameSpace, String resourceId) throws Exception {
+        return device.findObject(new UiSelector().resourceId(nameSpace + ":id/" + resourceId));
+    }
+
+    public static UiObject getUiObjectByPackage( String packageName) throws Exception {
+        return device.findObject(new UiSelector().packageName(packageName));
+    }
+
+    public static void tapBack () {
+        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.pressBack();
+    }
+
+    public static Matcher<Root> isToast() {
+        return new ToastMatcher();
+    }
+
+    public static void isToastMessageWithTextDisplayed(String toastString) {
+        onView(withText(toastString)).inRoot(isToast()).check(matches(isDisplayed()));
+    }
+
 }
