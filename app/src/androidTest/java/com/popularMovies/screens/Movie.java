@@ -2,6 +2,7 @@ package com.popularMovies.screens;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 
@@ -11,15 +12,12 @@ import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeDown;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.popularMovies.tests.Helpers.mediaItemPosition;
-import static com.popularMovies.tests.Helpers.withCustomConstraints;
 import static org.hamcrest.Matchers.allOf;
 
 /**
@@ -41,8 +39,8 @@ public class Movie {
         okMessageButton.click();
     }
 
-    public static boolean isTitleDisplayed(String title) throws Exception{
-        return Helpers.checkIfUIObjectIsVisible(allOf(withText(title), isCompletelyDisplayed()), 3);
+    public static boolean isTitleDisplayed(int rid) throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withId(rid), isCompletelyDisplayed()), 3);
     }
 
     public static boolean isActorDisplayed(int rid) throws Exception{
@@ -66,16 +64,21 @@ public class Movie {
         clickOptiMovies.click();
     }
 
-    public static void navigateToElementFromRecyclerView(int rid, int position) throws Exception{
+    public static void clickNavigateToElementFromRecyclerView(int rid, int position) throws Exception{
         onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
         onView(mediaItemPosition(withId(rid), position)).perform( click() );
     }
 
-    public static void navigateToElement(int rid) throws Exception{
-        onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed())).perform(click());
+    public static void navigateToElementFromRecyclerView(int rid, int position) throws Exception{
+        onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
     }
 
-    public static void pullToRefresh(int rid) throws Exception{
-        onView(withId(rid)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
+    public static void navigateToElement(int rid) throws Exception{
+        onView(withId(rid)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+    }
+
+    public static void navigateHorizontally(int rid, int position) throws Exception{
+        onView(withId(rid)).perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
+        Movie.clickNavigateToElementFromRecyclerView(rid, position);
     }
 }

@@ -23,12 +23,14 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -115,28 +117,6 @@ public class Helpers extends EspressoTestBase {
         };
     }
 
-    public static boolean checkIfItemIsListed(int rid2, Matcher<View> matcher) {
-        boolean found = false;
-        int i = 0;
-        int MAX_SWIPES = 10;
-        while(!found && i < MAX_SWIPES) {
-            onView(withId(rid2)).perform(swipeUp());
-            SystemClock.sleep(450);
-            try {
-                onView(matcher).check(matches(isDisplayed())).perform(click());
-                found = true;
-            } catch(Exception e) {
-                // The search continues
-            }
-            i++;
-        }
-
-        if(!found) {
-            Assert.fail("The element has not been found.");
-        }
-        return found;
-    }
-
     public static boolean isItemDisplayed(String string) throws Exception {
         return Helpers.checkIfUIObjectIsVisible(allOf(withText(string), isCompletelyDisplayed()), 3);
     }
@@ -204,5 +184,9 @@ public class Helpers extends EspressoTestBase {
                 action.perform(uiController, view);
             }
         };
+    }
+
+    public static void pullToRefresh(int rid) throws Exception{
+        onView(withId(rid)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
     }
 }

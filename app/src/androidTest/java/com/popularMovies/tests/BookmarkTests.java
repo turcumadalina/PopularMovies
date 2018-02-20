@@ -1,6 +1,5 @@
 package com.popularMovies.tests;
 
-import com.popularMovies.constants.Strings;
 import com.popularMovies.screens.BookmarkMovie;
 import com.popularMovies.screens.Movie;
 import com.popularMovies.screens.NavDrawer;
@@ -31,21 +30,21 @@ public class BookmarkTests extends EspressoTestBase {
         Movie.bookmarkItem();
         pressBack();
         NavDrawer.bookmarkedMovies();
-        Assert.assertTrue("The Nutjob 2 is not displayed.", Movie.isTitleDisplayed(Strings.NUTJOB2));
+        Assert.assertTrue("The movie title is not displayed.", Movie.isTitleDisplayed(R.id.orgTitle));
     }
 
     @Test
     public void testShareItem() throws Exception {
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
         Movie.shareMovie();
-        Assert.assertTrue("The Nutjob 2 is not displayed.", Movie.isTitleDisplayed(Strings.NUTJOB2));
+        Assert.assertTrue("The movie title is not displayed.", Movie.isTitleDisplayed(R.id.orgTitle));
     }
 
     @Test
     public void testPlayItem() throws Exception {
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
         Movie.playMovie();
-        Assert.assertTrue("The NowPlayingMovies screen is not displayed.", Movie.isTitleDisplayed(Strings.NUTJOB2));
+        Assert.assertTrue("The NowPlayingMovies screen is not displayed.", Movie.isTitleDisplayed(R.id.orgTitle));
     }
 
     @Test
@@ -60,14 +59,14 @@ public class BookmarkTests extends EspressoTestBase {
     public void testIfAnActorIsDisplayed() throws Exception {
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
         Helpers.clickOnAView(R.id.drawer_layout, withId(R.id.recyclerview_cast), 1);
-        Assert.assertTrue("The Katherine Heigl is not displayed.", Movie.isActorDisplayed(R.id.birthday_title));
+        Assert.assertTrue("The actor details are not displayed.", Movie.isActorDisplayed(R.id.birthday_title));
     }
 
     @Test
     public void testAddNewTvShowToBookmarkedTvShows() throws Exception {
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 11);
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
-        Movie.pullToRefresh(R.id.detail_swipe_refresh);
+        Helpers.pullToRefresh(R.id.detail_swipe_refresh);
         Movie.bookmarkItem();
         pressBack();
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 13);
@@ -78,7 +77,16 @@ public class BookmarkTests extends EspressoTestBase {
     @Test
     public void testIfSimiliarMoviesAreDisplayed() throws Exception{
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 1);
-        Movie.navigateToElementFromRecyclerView(R.id.recyclerview_similar_movies, 0);
+        Movie.clickNavigateToElementFromRecyclerView(R.id.recyclerview_cast, 0);
         Assert.assertTrue("The similiar movie is not displayed.", Movie.isMovieDisplayed(R.id.backdropImg));
+    }
+
+    @Test
+    public void testIfSwipeActorsWork() throws Exception {
+        NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
+        //Helpers.clickOnAView(R.id.drawer_layout, withId(R.id.recyclerview_cast), 1);
+        Movie.navigateToElement(R.id.recyclerview_cast);
+        Movie.navigateHorizontally(R.id.recyclerview_cast,2);
+        Assert.assertTrue("The actor details are not displayed.", Movie.isActorDisplayed(R.id.birthday_title));
     }
 }
