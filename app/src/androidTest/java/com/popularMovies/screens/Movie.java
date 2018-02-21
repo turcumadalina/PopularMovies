@@ -47,14 +47,18 @@ public class Movie {
         return Helpers.checkIfUIObjectIsVisible(allOf(withId(rid), isCompletelyDisplayed()), 3);
     }
 
-    public static boolean isMovieDisplayed(int backgroundmovieimage) throws Exception{
-        return Helpers.checkIfUIObjectIsVisible(allOf(withId(backgroundmovieimage), isCompletelyDisplayed()), 3);
+    public static boolean isMovieDisplayed(int rid) throws Exception{
+        return Helpers.checkIfUIObjectIsVisible(allOf(withId(rid), isCompletelyDisplayed()), 3);
     }
 
     public static void playMovie() throws Exception{
         onView(withId(R.id.play)).perform(click());
-        Helpers.isYouTubeDisplayed("com.google.android.youtube");
+        Helpers.getUiObjectByPackage("com.google.android.youtube");
         Movie.navigateBackToApp();
+    }
+
+    public static void openWeb() throws Exception{
+
     }
 
     public static void navigateBackToApp() throws Exception{
@@ -62,6 +66,11 @@ public class Movie {
         mDevice.pressRecentApps();
         UiObject clickOptiMovies = Helpers.getUiObjectByText("Opti Movies");
         clickOptiMovies.click();
+    }
+
+    public static void clickAndVerifyTheHomepage(int rid, String text) throws Exception{
+        onView(withId(rid)).perform(click());
+        Helpers.get3rdPartyAppByPackage(text);
     }
 
     public static void clickNavigateToElementFromRecyclerView(int rid, int position) throws Exception{

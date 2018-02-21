@@ -1,15 +1,18 @@
 package com.popularMovies.tests;
 
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.test.espresso.AppNotIdleException;
 import android.support.test.espresso.NoMatchingRootException;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.Root;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiSelector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.popularMovies.constants.Time;
@@ -20,6 +23,8 @@ import junit.framework.AssertionFailedError;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -34,6 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtL
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+
 
 /**
  * Created by valentin.boca on 2/14/2018.
@@ -125,7 +131,7 @@ public class Helpers extends EspressoTestBase {
         return Helpers.getText(withId(rid)).equalsIgnoreCase(text);
     }
 
-    public static boolean isYouTubeDisplayed(String text) throws Exception {
+    public static boolean get3rdPartyAppByPackage(String text) throws Exception {
         return Helpers.getUiObjectByPackage(text).equals(text);
     }
 
@@ -186,7 +192,15 @@ public class Helpers extends EspressoTestBase {
         };
     }
 
-    public static void pullToRefresh(int rid) throws Exception{
-        onView(withId(rid)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
+    public static void pullToRefresh() throws Exception{
+        onView(withId(R.id.detail_swipe_refresh)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
+    }
+
+    public static Matcher<Root> isToast() {
+         return new ToastMatcher();
+    }
+
+    public static void isToastMessageWithTextDisplayed(String toastString) {
+      onView(withText(toastString)).inRoot(isToast()).check(matches(isDisplayed()));
     }
 }

@@ -12,4 +12,5 @@ public class Strings {
     public static final String TOPBILLED = "Top Billed Cast";
     public static final String KATHERINEHEIGL = "Katherine Heigl";
     public static final String THEMAGICIANS = "The Magicians";
+    public static final String BROWSER = "com.android.browser";
 }

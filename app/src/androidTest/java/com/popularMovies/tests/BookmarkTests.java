@@ -1,5 +1,6 @@
 package com.popularMovies.tests;
 
+import com.popularMovies.constants.Strings;
 import com.popularMovies.screens.BookmarkMovie;
 import com.popularMovies.screens.Movie;
 import com.popularMovies.screens.NavDrawer;
@@ -50,9 +51,11 @@ public class BookmarkTests extends EspressoTestBase {
     @Test
     public void testRedirectingToHomePage() throws Exception {
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
+        Helpers.pullToRefresh();
         Movie.navigateToElement(R.id.homepage);
+        Movie.clickAndVerifyTheHomepage(R.id.homepage, Strings.BROWSER);
         Movie.navigateBackToApp();
-        Assert.assertTrue("The NowPlayingMovies screen is not displayed.", Movie.isMovieDisplayed(R.id.homepage));
+        Assert.assertTrue("The Movie screen is not displayed.", Movie.isMovieDisplayed(R.id.homepage));
     }
 
     @Test
@@ -66,7 +69,7 @@ public class BookmarkTests extends EspressoTestBase {
     public void testAddNewTvShowToBookmarkedTvShows() throws Exception {
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 11);
         NavDrawer.clickAMediaItemFromTheList(R.id.gridview_movie, 0);
-        Helpers.pullToRefresh(R.id.detail_swipe_refresh);
+        Helpers.pullToRefresh();
         Movie.bookmarkItem();
         pressBack();
         NavDrawer.navDrawerCategories(R.id.nav_view, R.id.design_navigation_view, 13);
