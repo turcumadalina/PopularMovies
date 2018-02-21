@@ -18,6 +18,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -38,7 +39,7 @@ public class PlayPopularMovieTest extends EspressoTestBase  {
 
         UiObject youtubeWindow = Helpers.getUiObjectByPackage(Strings.PACKAGE_NAME_YOUTUBE);
         //Assert the video is opened
-        assertTrue(youtubeWindow.exists());
+        assertFalse("AssertionError: Youtube not opened!",!youtubeWindow.exists());
         // Go back to the Application Under Test
         Helpers.tapBack();
     }

@@ -108,9 +108,15 @@ public class Helpers extends EspressoTestBase {
         };
     }
 
-    public static void clickOnItem (int id)
+    public static void clickOnItemWithId(int id)
     {
         onView(withId(id)).perform(click());
+
+    }
+
+    public static void clickOnItem(final Matcher<View> matcher)
+    {
+        onView(matcher).perform(click());
 
     }
 
