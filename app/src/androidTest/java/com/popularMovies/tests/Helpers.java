@@ -9,7 +9,10 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.action.Tap;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
@@ -19,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import com.popularMovies.constants.Strings;
 import com.popularMovies.constants.Time;
 
 import junit.framework.AssertionFailedError;
@@ -32,13 +34,13 @@ import work.technie.popularmovies.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 /**
  * Created by ioana.hoaghia on 2/14/2018.
@@ -114,9 +116,33 @@ public class Helpers extends EspressoTestBase {
 
     }
 
-    public static void clickOnItem(final Matcher<View> matcher)
+    public static void scrollTheMoviesScreenETimes(int e){
+        // int e = the item index to which the scroll is done.
+
+        if (e > 2) {
+        int i;
+        for (i = 0; i < e; i++ ) {
+
+            onView(withId(R.id.gridview_movie)).perform(swipeUp());
+        }}
+
+    }
+
+    public static void scrollTheSingleMovieScreenETimes(int e){
+        // int e = the item index to which the scroll is done.
+
+        if (e > 2) {
+            int i;
+            for (i = 0; i < e; i++ ) {
+
+                onView(withId(R.id.detail_swipe_refresh)).perform(swipeUp());
+            }}
+
+    }
+
+    public static void pullToRefresh(final Matcher<View> matcher)
     {
-        onView(matcher).perform(click());
+        onView(matcher).perform(swipeDown());
 
     }
 
@@ -206,5 +232,45 @@ public class Helpers extends EspressoTestBase {
     public static void isToastMessageWithTextDisplayed(String toastString) {
         onView(withText(toastString)).inRoot(isToast()).check(matches(isDisplayed()));
     }
+    public static ViewAction swipeDown() {
+        return new GeneralSwipeAction(Swipe.SLOW, GeneralLocation.TOP_CENTER,
+                GeneralLocation.BOTTOM_CENTER, Press.FINGER);
+    }
 
+    public static void scrollDownUntilObjectIsCompletelyVisible(Matcher<View> matcher, final int maxAttempt) throws Exception {
+        int attempt = 0;
+
+        boolean isObjectCompletelyDisplayed = false;
+
+        while (!isObjectCompletelyDisplayed && attempt < maxAttempt) {
+            try {
+                onView(matcher).check(matches(isCompletelyDisplayed()));
+                isObjectCompletelyDisplayed = true;
+            } catch (NoMatchingViewException | AppNotIdleException | AssertionFailedError e) {
+                attempt++;
+                device.swipe(device.getDisplayWidth() / 2, (int) (device.getDisplayHeight()*.75), device.getDisplayWidth() / 2, (int) (device.getDisplayHeight()*.6), 10);
+            }
+        }
+    }
+
+    public static void waitForXSeconds(int waitTimeInSeconds) {
+        long endTime = System.currentTimeMillis() + Time.ONE_SECOND * waitTimeInSeconds;
+        while (System.currentTimeMillis() <= endTime) {
+        }
+    }
+
+    /*public static void scrollDownXTimes(int scrollsCount, boolean... waitBetweenScrolls) throws Exception {
+        int scrollStartY = (int) (device.getDisplayHeight() * .8);
+        int scrollEndY = (int) (device.getDisplayHeight() * .2);
+
+        scrollScreenMultipleTimes(scrollStartY, scrollEndY, scrollsCount, waitBetweenScrolls);
+    }
+
+
+    public static void scrollUpScreenMultipleTimes(int scrollsCount) throws Exception {
+        int scrollStartY = (int) (device.getDisplayHeight() * .4);
+        int scrollEndY = (int) (device.getDisplayHeight() * .8);
+
+        scrollScreenMultipleTimes(scrollStartY, scrollEndY, scrollsCount);
+    }*/
 }

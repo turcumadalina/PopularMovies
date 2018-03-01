@@ -1,18 +1,10 @@
 package com.popularMovies.tests;
 
-import android.support.test.espresso.Espresso;
-
 import com.popularMovies.constants.Strings;
 import com.popularMovies.constants.Timeouts;
 import com.popularMovies.screens.Movies;
 
 import org.junit.Test;
-
-import work.technie.popularmovies.R;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by ioana.hoaghia on 2/20/2018.
